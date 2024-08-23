@@ -31,37 +31,37 @@ except:
      st.write(f"**TRY AGAIN WITH BETTER INTERNET**")
      st.stop()
 st.write(dfb.columns)
-dfb= dfb[['CLUSTER','DISTRICT','ACTIVITY', 'DONE', 'WEEK','FACILITY']]
+dfb= dfb[['CLUSTER','DISTRICT','ACTIVITY', 'DONE', 'WEEK','FACILITY', 'ID']]
 file = r'PREVENTION.csv'
 dfa = pd.read_csv(file)
 
 
-dfa= dfa[['DISTRICT','ACTIVITY', 'PLANNED']]
+dfa= dfa[['CLUSTER','ACTIVITY', 'PLANNED']]
 
 dfb['WEEK'] = dfb['WEEK'].astype(int)
-dfb['DISTRICT'] = dfb['DISTRICT'].astype(str)
+dfb['CLUSTER'] = dfb['CLUSTER'].astype(str)
 #dfb['AREA'] = dfb['AREA'].astype(str)
 dfb['ACTIVITY'] = dfb['ACTIVITY'].astype(str)
 dfb['DONE'] = dfb['DONE'].astype(int)
 
-dfa['DISTRICT'] = dfa['DISTRICT'].astype(str)
+dfa['CLUSTER'] = dfa['CLUSTER'].astype(str)
 #dfa['AREA'] = dfa['AREA'].astype(str)
 dfa['ACTIVITY'] = dfa['ACTIVITY'].astype(str)
 dfa['PLANNED'] = dfa['PLANNED'].astype(int)
 
 
 st.sidebar.subheader('Filter from here ')
-district = st.sidebar.multiselect('Pick a district', dfa['DISTRICT'].unique())
+cluster = st.sidebar.multiselect('Pick a cluster', dfa['CLUSTER'].unique())
 
-if not district:
+if not cluster:
     dfa2 = dfa.copy()
     dfb2 = dfb.copy()
 else:
-    dfa2 = dfa[dfa['DISTRICT'].isin(district)]
-    dfb2 = dfb[dfb['DISTRICT'].isin(district)]
+    dfa2 = dfa[dfa['CLUSTER'].isin(cluster)]
+    dfb2 = dfb[dfb['CLUSTER'].isin(cluster)]
 
 # #create for district
-# area = st.sidebar.multiselect('Choose a thematic area', dfa2['AREA'].unique())
+# area = st.sidebar.multiselect('Choose a district', dfa2[''].unique())
 # if not area:
 #     dfa3 = dfa2.copy()
 #     dfb3 = dfb2.copy()
@@ -73,12 +73,12 @@ else:
 activity = st.sidebar.multiselect('Choose an activity', dfa2['ACTIVITY'].unique())
 
 #Filter Week, District, Facility
-if not district  and not activity:
+if not cluster  and not activity:
     filtered_dfa = dfa
     filtered_dfb = dfb
 elif not activity:
-    filtered_dfa = dfa[dfa['DISTRICT'].isin(district)].copy()
-    filtered_dfb = dfb[dfb['DISTRICT'].isin(district)].copy()
+    filtered_dfa = dfa[dfa['CLUSTER'].isin(cluster)].copy()
+    filtered_dfb = dfb[dfb['CLUSTER'].isin(cluster)].copy()
 # elif not district and not activity:
 #     filtered_dfa = dfa[dfa['AREA'].isin(area)].copy()
 #     filtered_dfb = dfb[dfb['AREA'].isin(area)].copy()
@@ -87,11 +87,11 @@ elif not activity:
 #     filtered_dfa = dfa3[dfa3['AREA'].isin(area)& dfa3['ACTIVITY'].isin(activity)].copy()
 #      #
 #     filtered_dfb = dfb3[dfb3['AREA'].isin(area)& dfb3['ACTIVITY'].isin(activity)].copy()
-elif district and activity:
+elif cluster and activity:
      #
-    filtered_dfa = dfa2[dfa2['DISTRICT'].isin(district)& dfa2['ACTIVITY'].isin(activity)].copy()
+    filtered_dfa = dfa2[dfa2['CLUSTER'].isin(cluster)& dfa2['ACTIVITY'].isin(activity)].copy()
      #
-    filtered_dfb = dfb2[dfb2['DISTRICT'].isin(district)& dfb2['ACTIVITY'].isin(activity)].copy()
+    filtered_dfb = dfb2[dfb2['CLUSTER'].isin(cluster)& dfb2['ACTIVITY'].isin(activity)].copy()
 # elif district and area:
 #      #
 #     filtered_dfa = dfa3[dfa3['DISTRICT'].isin(district)& dfa3['AREA'].isin(area)].copy()
@@ -105,21 +105,21 @@ elif activity:
 #     filtered_dfb = dfb2[dfb2['DISTRICT'].isin(district) & dfb2['ACTIVITY'].isin(activity)].copy()
 #################################################################################################
 cols,cold = st.columns(2)
-dist = filtered_dfb['DISTRICT']. unique()
-if not district:
+clus = filtered_dfb['CLUSTER']. unique()
+if not cluster:
     pass
-elif len(dist) == 0:
-    cols.write(f'**No data for this district**')
+elif len(clus) == 0:
+    cols.write(f'**No data for this cluster**')
 else:
-    cols.write(f'**You are viewing data for: {dist}**')
+    cols.write(f'**You are viewing data for: {clus}**')
 
-ar = filtered_dfb['AREA']. unique()
-if len(ar) == 0:
-    cold.write(f'**No data for the thematic area(s) chosen**')
-elif len(ar)>1:
-     pass
-elif len(ar)==1:
-     cold.write(f'**The data set is filtered by: {ar} thematic area(s)**')
+# ar = filtered_dfb['AREA']. unique()
+# if len(ar) == 0:
+#     cold.write(f'**No data for the thematic area(s) chosen**')
+# elif len(ar)>1:
+#      pass
+# elif len(ar)==1:
+#      cold.write(f'**The data set is filtered by: {ar} thematic area(s)**')
 
 act = filtered_dfb['ACTIVITY']. unique()
 
@@ -187,7 +187,7 @@ fig2.update_layout(xaxis_title='WEEK', yaxis_title='TOTAL DONE',
 
 st.plotly_chart(fig2, use_container_width=True)
 
-filtered_dfc= filtered_dfb[['CLUSTER','DISTRICT','FACILITY' ,'AREA','ACTIVITY', 'DONE', 'WEEK']]
+filtered_dfc= filtered_dfb[['CLUSTER','FACILITY' ,'AREA','ACTIVITY', 'DONE', 'WEEK','ID']]
 with st.expander(f'**CLICK HERE TO SEE FULL DATA SET**'):
     st.dataframe(filtered_dfc.reset_index(drop=True))
     csv_data = filtered_dfc.to_csv(index=False)
