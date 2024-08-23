@@ -189,7 +189,7 @@ st.plotly_chart(fig2, use_container_width=True)
 
 #st.write(filtered_dfb.columns)
 filtered_dfc= filtered_dfb[['CLUSTER','FACILITY','ACTIVITY', 'DONE', 'WEEK','ID']]
-filtered_dfc = filtered_dfc.set_index('CLUSTER')
+#filtered_dfc = filtered_dfc.set_index('CLUSTER')
 with st.expander(f'**CLICK HERE TO SEE FULL DATA SET**'):
     st.dataframe(filtered_dfc.reset_index(drop=True))
     csv_data = filtered_dfc.to_csv(index=False)
