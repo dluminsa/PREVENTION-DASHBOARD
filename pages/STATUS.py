@@ -17,7 +17,7 @@ district = ''
 cluster = ''
 ids = ''
 Intention = st.radio('**HOW MAY I HELP YOU?**', options=['MARK REVIEWED PAPER WORK', 'CHECK REVIEW STATUS'], index=None)
-file = r'PLANNED.csv'
+file = r'PREVENTION.csv'
 df = pd.read_csv(file)
 
 if Intention:
@@ -86,7 +86,7 @@ else:
     if cluster:
         try:
              conn = st.connection('gsheets', type=GSheetsConnection)
-             exist1 = conn.read(worksheet= 'DONE', usecols=list(range(10)),ttl=5)
+             exist1 = conn.read(worksheet= 'PREV', usecols=list(range(10)),ttl=5)
              exist2 = conn.read(worksheet= 'PAID', usecols=list(range(2)),ttl=5)
              existing1= exist1.dropna(how='all')
              existing2= exist2.dropna(how='all')
