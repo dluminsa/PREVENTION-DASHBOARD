@@ -30,7 +30,7 @@ except:
      st.write(f"**Your network is poor, couldn't connect to the google sheet**")
      st.write(f"**TRY AGAIN WITH BETTER INTERNET**")
      st.stop()
-st.write(dfb.columns)
+#st.write(dfb.columns)
 dfb= dfb[['CLUSTER','DISTRICT','ACTIVITY', 'DONE', 'WEEK','FACILITY', 'ID']]
 file = r'PREVENTION.csv'
 dfa = pd.read_csv(file)
@@ -186,7 +186,7 @@ fig2.update_layout(xaxis_title='WEEK', yaxis_title='TOTAL DONE',
                      yaxis=dict(showline=True, linewidth=1, linecolor='black'))  # Show y-axis line)
 
 st.plotly_chart(fig2, use_container_width=True)
-
+st.write)filtered_dfb.columns)
 filtered_dfc= filtered_dfb[['CLUSTER','FACILITY' ,'AREA','ACTIVITY', 'DONE', 'WEEK','ID']]
 with st.expander(f'**CLICK HERE TO SEE FULL DATA SET**'):
     st.dataframe(filtered_dfc.reset_index(drop=True))
