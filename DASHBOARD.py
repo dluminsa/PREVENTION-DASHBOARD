@@ -186,7 +186,7 @@ fig2.update_layout(xaxis_title='WEEK', yaxis_title='TOTAL DONE',
                      yaxis=dict(showline=True, linewidth=1, linecolor='black'))  # Show y-axis line)
 
 st.plotly_chart(fig2, use_container_width=True)
-st.write)filtered_dfb.columns)
+st.write(filtered_dfb.columns)
 filtered_dfc= filtered_dfb[['CLUSTER','FACILITY' ,'AREA','ACTIVITY', 'DONE', 'WEEK','ID']]
 with st.expander(f'**CLICK HERE TO SEE FULL DATA SET**'):
     st.dataframe(filtered_dfc.reset_index(drop=True))
