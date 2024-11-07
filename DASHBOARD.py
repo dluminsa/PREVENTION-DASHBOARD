@@ -92,7 +92,7 @@ elif activity:
 #FACILITY
 # facilities = list(','.join(filtered_dfb['FACILITY'].unique()))
 st.sidebar.subheader('CHECK FACILITY PERFORMANCE')
-fac = st.sidebar.multiselect('Pick a cluster', filtered_dfb['FACILITY'].unique())
+fac = st.sidebar.multiselect('Pick an activity first, then a facility', filtered_dfb['FACILITY'].unique())
 if fac:
      if not activity:
           st.warning('FIRST CHOOSE AN ACTIVITY THAT YOU WANT TO MONITOR FOR THIS ACTIVITY')
