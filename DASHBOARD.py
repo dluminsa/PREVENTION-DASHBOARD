@@ -90,17 +90,15 @@ elif activity:
     filtered_dfm = dfm2[dfm2['ACTIVITY'].isin(activity)].copy()
 ################################################################################################
 #FACILITY
-facilities = list(','.join(filtered_dfb['FACILITY'].unique()))
-st.sidebar.subheader('CHECK FACILITY PERFORMANCE ')
-fac = st.sidebar.multiselect('Pick a cluster', facilities)
+# facilities = list(','.join(filtered_dfb['FACILITY'].unique()))
+st.sidebar.subheader('CHECK FACILITY PERFORMANCE')
+fac = st.sidebar.multiselect('Pick a cluster', filtered_dfb['FACILITY'].unique())
 if fac:
      if not activity:
           st.warning('FIRST CHOOSE AN ACTIVITY THAT YOU WANT TO MONITOR FOR THIS ACTIVITY')
           st.stop()
      else:     
           st.write(filtered_dfb)
-          fac = str(fac[0])
-          st.write(fac)
           facd = filtered_dfb[filtered_dfb['FACILITY']== fac].copy()
           conducted = facd['DONE'].sum()
           st.write(f'FOR THE SELECTED ACTIVITY, {fac} HAS CONDUCTED {conducted}')
