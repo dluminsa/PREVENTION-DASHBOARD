@@ -137,7 +137,7 @@ with col4:
 with col5:
     st.metric(label='**BALANCE**', value=f'{notdone:,.0f}')
 ######################################################################################################
-st.write(filtered_dfa.columns)
+st.write(filtered_dfa['AMOUNT'])
 
 plan = filtered_dfa['AMOUNT'].sum()
 conducted = filtered_dfb['AMOUNT'].sum()
