@@ -42,7 +42,7 @@ dfa = pd.read_csv(file)
 
 
 dfa= dfa[['CLUSTER','ACTIVITY', 'PLANNED']]
-
+dfb['WEEK'] = dfb[dfb['WEEK']>0].copy()
 dfb['WEEK'] = dfb['WEEK'].astype(int)
 dfb['CLUSTER'] = dfb['CLUSTER'].astype(str)
 #dfb['AREA'] = dfb['AREA'].astype(str)
