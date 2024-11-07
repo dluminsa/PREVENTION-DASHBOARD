@@ -41,7 +41,7 @@ except:
 dfb= dfb[['CLUSTER','DISTRICT','ACTIVITY', 'DONE', 'WEEK','FACILITY', 'ID']]
 file = r'PLANNED.csv'
 dfa = pd.read_csv(file)
-dfa['AMOUNT'] = dfa['AMOUNT'].astype(int)
+dfa['AMOUNT'] = pd.to_numeric(dfa['AMOUNT'], errors='coerce')#.astype(int)
 dfb = dfb[dfb['WEEK']>0].copy()
 dfb['WEEK'] = dfb['WEEK'].astype(int)
 dfb['CLUSTER'] = dfb['CLUSTER'].astype(str)
