@@ -25,7 +25,7 @@ cola,colb,colc = st.columns([1,2,1])
 cola.write(f'**CURRENT WEEK IS: {k}**')
 colc.write(f'**SURGE WEEK IS: {t}**')
 conn = st.connection('gsheets', type=GSheetsConnection)     
-dfb = conn.read(worksheet='PREV', usecols=list(range(11)), ttl=5)
+dfb = conn.read(worksheet='AMOUNT', usecols=list(range(11)), ttl=5)
 dfb = dfb.dropna(how='all')
 try:
      conn = st.connection('gsheets', type=GSheetsConnection)     
