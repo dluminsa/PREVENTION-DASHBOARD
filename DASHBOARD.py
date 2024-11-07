@@ -50,6 +50,7 @@ dfb['DONE'] = dfb['DONE'].astype(int)
 dfa['CLUSTER'] = dfa['CLUSTER'].astype(str)
 #dfa['AREA'] = dfa['AREA'].astype(str)
 dfa['ACTIVITY'] = dfa['ACTIVITY'].astype(str)
+dfa = dfa[dfa['PLANNED']>0].copy()
 dfa['PLANNED'] = dfa['PLANNED'].astype(int)
 
 
