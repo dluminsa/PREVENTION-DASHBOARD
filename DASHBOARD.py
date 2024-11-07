@@ -97,7 +97,8 @@ if fac:
      facd = filtered_dfb[filtered_dfb['FACILITY']== fac].copy()
      conducted = facd['DONE'].sum()
      st.write(f'FOR THE SELECTED ACTIVITY, {fac} HAS CONDUCTED {conducted}')
-else pass:
+else:
+     pass
 #################################################################################################
 if not fac:
      cols,cold = st.columns(2)
