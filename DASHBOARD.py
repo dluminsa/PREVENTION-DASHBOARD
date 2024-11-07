@@ -12,8 +12,8 @@ import plotly.graph_objects as go
 st.set_page_config(
      page_title= 'PREVENTION ACTIVITIES DASHBOARD'
 )
-st.write('BEING UPDATED, WILL RETURN AFTER THE NEW BUDGETS')
-st.stop()
+# st.write('BEING UPDATED, WILL RETURN AFTER THE NEW BUDGETS')
+# st.stop()
 cola,colb,colc = st.columns([1,2,1])
 cola.write('')
 colb.markdown("<h4><b>PREVENTION ACTIVITIES DASHBOARD</b></h4>", unsafe_allow_html=True)
