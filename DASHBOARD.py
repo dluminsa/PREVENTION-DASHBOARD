@@ -94,6 +94,7 @@ facilities = filtered_dfb['FACILITY'].unique()
 st.sidebar.subheader('CHECK FACILITY PERFORMANCE ')
 fac = st.sidebar.multiselect('Pick a cluster', facilities)
 if fac:
+     st.write(filtered_dfb)
      facd = filtered_dfb[filtered_dfb['FACILITY']== fac].copy()
      conducted = facd['DONE'].sum()
      st.write(f'FOR THE SELECTED ACTIVITY, {fac} HAS CONDUCTED {conducted}')
