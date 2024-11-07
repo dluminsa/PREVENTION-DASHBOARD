@@ -141,13 +141,14 @@ if conducted>plan:
     st.warning(f"SOMETHING IS WRONG, IT SEEMS ACTIVITIES DONE ARE MORE THAN THOSE THAT WERE PLANNED FOR!!")
 
 col1,col2,col3 = st.columns(3)#, gap='large')
-
-with col1:
-    st.metric(label='**BUDGETED**', value=f'{plan:,.0f}')
-with col2:
-    st.metric(label='**SPENT**', value=f'{conducted:,.0f}')
-with col3:
-    st.metric(label='**BALANCE**', value=f'{perc:,.0f}')
+with st.expander('CLICK HERE TO SEE EXPENDITURE')
+     col1,col2,col3 = st.columns(3)#,
+     with col1:
+         st.metric(label='**BUDGETED**', value=f'{plan:,.0f}')
+     with col2:
+         st.metric(label='**SPENT**', value=f'{conducted:,.0f}')
+     with col3:
+         st.metric(label='**BALANCE**', value=f'{notdone:,.0f}')
 
 #######################################################################################################
 #PIE CHART
