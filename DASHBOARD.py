@@ -24,8 +24,6 @@ t = int(k) -39
 cola,colb,colc = st.columns([1,2,1])
 cola.write(f'**CALENDAR WEEK IS: {k}**')
 colc.write(f'**SURGE WEEK IS: {t}**')
-
-
 try:
      conn = st.connection('gsheets', type=GSheetsConnection)     
      dfb = conn.read(worksheet='PREV', usecols=list(range(11)), ttl=5)
@@ -41,7 +39,7 @@ except:
 dfb= dfb[['CLUSTER','DISTRICT','ACTIVITY', 'DONE', 'WEEK','FACILITY', 'ID']]
 file = r'PLANNED.csv'
 dfa = pd.read_csv(file)
-dfa['AMOUNT'] = pd.to_numeric(dfa['AMOUNT'], errors='coerce')#.astype(int)
+#dfa['AMOUNT'] = pd.to_numeric(dfa['AMOUNT'], errors='coerce')#.astype(int)
 dfb = dfb[dfb['WEEK']>0].copy()
 dfb['WEEK'] = dfb['WEEK'].astype(int)
 dfb['CLUSTER'] = dfb['CLUSTER'].astype(str)
@@ -55,7 +53,6 @@ dfa['ACTIVITY'] = dfa['ACTIVITY'].astype(str)
 dfa = dfa[dfa['PLANNED']>0].copy()
 dfa['PLANNED'] = dfa['PLANNED'].astype(int)
 
-
 st.sidebar.subheader('Filter from here ')
 cluster = st.sidebar.multiselect('Pick a cluster', dfa['CLUSTER'].unique())
 
@@ -67,7 +64,6 @@ else:
     dfa2 = dfa[dfa['CLUSTER'].isin(cluster)]
     dfb2 = dfb[dfb['CLUSTER'].isin(cluster)]
     dfm2 = dfm[dfm['CLUSTER'].isin(cluster)]
-
  
 #for facility
 activity = st.sidebar.multiselect('Choose an activity', dfa2['ACTIVITY'].unique())
@@ -102,7 +98,6 @@ elif len(clus) == 0:
 else:
     cols.write(f'**You are viewing data for: {clus}**')
 
-
 act = filtered_dfb['ACTIVITY']. unique()
 
 if not activity:
@@ -136,11 +131,10 @@ with col4:
     st.metric(label='**EXPECTED**', value=f'{exp} %')
 with col5:
     st.metric(label='**BALANCE**', value=f'{notdone:,.0f}')
-######################################################################################################
-st.write(filtered_dfa['AMOUNT'])
+#####################################################################################################f
 
 plan = filtered_dfa['AMOUNT'].sum()
-conducted = filtered_dfb['AMOUNT'].sum()
+conducted = filtered_dfm['AMOUNT'].sum()
 notdone = plan - conducted
 
 if conducted>plan:
