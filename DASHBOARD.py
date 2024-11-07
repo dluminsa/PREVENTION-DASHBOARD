@@ -141,7 +141,7 @@ if conducted>plan:
     st.warning(f"SOMETHING IS WRONG, IT SEEMS ACTIVITIES DONE ARE MORE THAN THOSE THAT WERE PLANNED FOR!!")
 
 col1,col2,col3 = st.columns(3)#, gap='large')
-with st.expander('CLICK HERE TO SEE EXPENDITURE')
+with st.expander('CLICK HERE TO SEE EXPENDITURE'):
      col1,col2,col3 = st.columns(3)#,
      with col1:
          st.metric(label='**BUDGETED**', value=f'{plan:,.0f}')
