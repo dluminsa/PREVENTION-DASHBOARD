@@ -10,8 +10,8 @@ from datetime import datetime, date
 st.set_page_config(
      page_title= 'ACTIVITIES REVIEW STATUS'
 )
-st.write('BEING UPDATED, WILL RETURN AFTER THE NEW BUDGETS')
-st.stop()
+# st.write('BEING UPDATED, WILL RETURN AFTER THE NEW BUDGETS')
+# st.stop()
 st.markdown("<h4><b>CHECK REVIEW STATUS OF PAPER WORK</b></h4>", unsafe_allow_html=True)
 
 total= 0
