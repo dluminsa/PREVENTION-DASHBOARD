@@ -41,7 +41,7 @@ except:
 dfb= dfb[['CLUSTER','DISTRICT','ACTIVITY', 'DONE', 'WEEK','FACILITY', 'ID']]
 file = r'PLANNED.csv'
 dfa = pd.read_csv(file)
-
+dfa['AMOUNT'] = dfa['AMOUNT'].astype(int)
 dfb = dfb[dfb['WEEK']>0].copy()
 dfb['WEEK'] = dfb['WEEK'].astype(int)
 dfb['CLUSTER'] = dfb['CLUSTER'].astype(str)
@@ -138,6 +138,7 @@ with col5:
     st.metric(label='**BALANCE**', value=f'{notdone:,.0f}')
 ######################################################################################################
 st.write(filtered_dfa.columns)
+
 plan = filtered_dfa['AMOUNT'].sum()
 conducted = filtered_dfb['AMOUNT'].sum()
 notdone = plan - conducted
