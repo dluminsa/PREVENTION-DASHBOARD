@@ -30,6 +30,9 @@ try:
      conn = st.connection('gsheets', type=GSheetsConnection)     
      dfb = conn.read(worksheet='PREV', usecols=list(range(11)), ttl=5)
      dfb = dfb.dropna(how='all')
+     conn = st.connection('gsheets', type=GSheetsConnection)     
+     dfm = conn.read(worksheet='AMOUNT', usecols=list(range(11)), ttl=5)
+     dfm = dfm.dropna(how='all')
 except:
      st.write(f"**Your network is poor, couldn't connect to the google sheet**")
      st.write(f"**TRY AGAIN WITH BETTER INTERNET**")
@@ -61,9 +64,11 @@ cluster = st.sidebar.multiselect('Pick a cluster', dfa['CLUSTER'].unique())
 if not cluster:
     dfa2 = dfa.copy()
     dfb2 = dfb.copy()
+    dfm2 = dfm.copy()
 else:
     dfa2 = dfa[dfa['CLUSTER'].isin(cluster)]
     dfb2 = dfb[dfb['CLUSTER'].isin(cluster)]
+    dfm2 = dfm[dfm['CLUSTER'].isin(cluster)]
 
  
 #for facility
@@ -73,18 +78,22 @@ activity = st.sidebar.multiselect('Choose an activity', dfa2['ACTIVITY'].unique(
 if not cluster  and not activity:
     filtered_dfa = dfa
     filtered_dfb = dfb
+    filtered_dfm = dfm
 elif not activity:
     filtered_dfa = dfa[dfa['CLUSTER'].isin(cluster)].copy()
     filtered_dfb = dfb[dfb['CLUSTER'].isin(cluster)].copy()
+    filtered_dfm = dfm[dfm['CLUSTER'].isin(cluster)].copy()
 
 elif cluster and activity:
      #
     filtered_dfa = dfa2[dfa2['CLUSTER'].isin(cluster)& dfa2['ACTIVITY'].isin(activity)].copy()
+    filtered_dfm = dfm2[dfm2['CLUSTER'].isin(cluster)& dfm2['ACTIVITY'].isin(activity)].copy()
      #
     filtered_dfb = dfb2[dfb2['CLUSTER'].isin(cluster)& dfb2['ACTIVITY'].isin(activity)].copy()
 elif activity:
     filtered_dfa = dfa2[dfa2['ACTIVITY'].isin(activity)].copy()
     filtered_dfb = dfb2[dfb2['ACTIVITY'].isin(activity)].copy()
+    filtered_dfm = dfm2[dfm2['ACTIVITY'].isin(activity)].copy()
 #################################################################################################
 cols,cold = st.columns(2)
 clus = filtered_dfb['CLUSTER']. unique()
@@ -129,6 +138,22 @@ with col4:
     st.metric(label='**EXPECTED**', value=f'{exp} %')
 with col5:
     st.metric(label='**BALANCE**', value=f'{notdone:,.0f}')
+######################################################################################################
+plan = filtered_dfa['AMOUNT'].sum()
+conducted = filtered_dfb['AMOUNT'].sum()
+notdone = plan - conducted
+
+if conducted>plan:
+    st.warning(f"SOMETHING IS WRONG, IT SEEMS ACTIVITIES DONE ARE MORE THAN THOSE THAT WERE PLANNED FOR!!")
+
+col1,col2,col3 = st.columns(3)#, gap='large')
+
+with col1:
+    st.metric(label='**BUDGETED**', value=f'{plan:,.0f}')
+with col2:
+    st.metric(label='**SPENT**', value=f'{conducted:,.0f}')
+with col3:
+    st.metric(label='**BALANCE**', value=f'{perc:,.0f}')
 
 #######################################################################################################
 #PIE CHART
