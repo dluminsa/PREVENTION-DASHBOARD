@@ -98,10 +98,9 @@ if fac:
           st.warning('FIRST CHOOSE AN ACTIVITY THAT YOU WANT TO MONITOR FOR THIS ACTIVITY')
           st.stop()
      else:     
-          st.write(filtered_dfb)
           facd = filtered_dfb[filtered_dfb['FACILITY'].isin(fac)].copy()
           conducted = facd['DONE'].sum()
-          st.write(f'FOR THE SELECTED ACTIVITY, {fac} HAS CONDUCTED {conducted}')
+          st.write(f'FOR {activity}, {fac} HAS CONDUCTED {conducted}')
 else:
      pass
 #################################################################################################
