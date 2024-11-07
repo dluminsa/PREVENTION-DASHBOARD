@@ -90,7 +90,7 @@ elif activity:
     filtered_dfm = dfm2[dfm2['ACTIVITY'].isin(activity)].copy()
 ################################################################################################
 #FACILITY
-facilities = filtered_dfb['FACILITY'].unique()
+facilities = list(','.join(filtered_dfb['FACILITY'].unique()))
 st.sidebar.subheader('CHECK FACILITY PERFORMANCE ')
 fac = st.sidebar.multiselect('Pick a cluster', facilities)
 if fac:
@@ -99,7 +99,8 @@ if fac:
           st.stop()
      else:     
           st.write(filtered_dfb)
-          st.write(filtered_dfb['FACILITY'])
+          fac = str(fac[0])
+          st.write(fac)
           facd = filtered_dfb[filtered_dfb['FACILITY']== fac].copy()
           conducted = facd['DONE'].sum()
           st.write(f'FOR THE SELECTED ACTIVITY, {fac} HAS CONDUCTED {conducted}')
