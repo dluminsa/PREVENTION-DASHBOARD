@@ -99,7 +99,7 @@ if fac:
           st.stop()
      else:     
           st.write(filtered_dfb)
-          facd = filtered_dfb[filtered_dfb['FACILITY']== fac].copy()
+          facd = filtered_dfb[filtered_dfb['FACILITY'].isin(fac)].copy()
           conducted = facd['DONE'].sum()
           st.write(f'FOR THE SELECTED ACTIVITY, {fac} HAS CONDUCTED {conducted}')
 else:
