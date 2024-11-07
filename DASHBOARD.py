@@ -22,8 +22,9 @@ current_time = time.localtime()
 k = time.strftime("%V", current_time)
 t = int(k) -39
 cola,colb,colc = st.columns([1,2,1])
-cola.write(f'**CURRENT WEEK IS: {k}**')
+cola.write(f'**CALENDAR WEEK IS: {k}**')
 colc.write(f'**SURGE WEEK IS: {t}**')
+
 
 try:
      conn = st.connection('gsheets', type=GSheetsConnection)     
@@ -64,14 +65,6 @@ else:
     dfa2 = dfa[dfa['CLUSTER'].isin(cluster)]
     dfb2 = dfb[dfb['CLUSTER'].isin(cluster)]
 
-# #create for district
-# area = st.sidebar.multiselect('Choose a district', dfa2[''].unique())
-# if not area:
-#     dfa3 = dfa2.copy()
-#     dfb3 = dfb2.copy()
-# else:
-#     dfa3 = dfa2[dfa2['AREA'].isin(area)]
-#     dfb3 = dfb2[dfb2['AREA'].isin(area)]
  
 #for facility
 activity = st.sidebar.multiselect('Choose an activity', dfa2['ACTIVITY'].unique())
@@ -83,30 +76,15 @@ if not cluster  and not activity:
 elif not activity:
     filtered_dfa = dfa[dfa['CLUSTER'].isin(cluster)].copy()
     filtered_dfb = dfb[dfb['CLUSTER'].isin(cluster)].copy()
-# elif not district and not activity:
-#     filtered_dfa = dfa[dfa['AREA'].isin(area)].copy()
-#     filtered_dfb = dfb[dfb['AREA'].isin(area)].copy()
-# elif area and activity:
-#      #
-#     filtered_dfa = dfa3[dfa3['AREA'].isin(area)& dfa3['ACTIVITY'].isin(activity)].copy()
-#      #
-#     filtered_dfb = dfb3[dfb3['AREA'].isin(area)& dfb3['ACTIVITY'].isin(activity)].copy()
+
 elif cluster and activity:
      #
     filtered_dfa = dfa2[dfa2['CLUSTER'].isin(cluster)& dfa2['ACTIVITY'].isin(activity)].copy()
      #
     filtered_dfb = dfb2[dfb2['CLUSTER'].isin(cluster)& dfb2['ACTIVITY'].isin(activity)].copy()
-# elif district and area:
-#      #
-#     filtered_dfa = dfa3[dfa3['DISTRICT'].isin(district)& dfa3['AREA'].isin(area)].copy()
-#      #
-#     filtered_dfb = dfb3[dfb3['DISTRICT'].isin(district)& dfb3['AREA'].isin(area)].copy()
 elif activity:
     filtered_dfa = dfa2[dfa2['ACTIVITY'].isin(activity)].copy()
     filtered_dfb = dfb2[dfb2['ACTIVITY'].isin(activity)].copy()
-# else:
-#     filtered_dfa = dfa2[dfa2['DISTRICT'].isin(district) & dfa2['ACTIVITY'].isin(activity)].copy()
-#     filtered_dfb = dfb2[dfb2['DISTRICT'].isin(district) & dfb2['ACTIVITY'].isin(activity)].copy()
 #################################################################################################
 cols,cold = st.columns(2)
 clus = filtered_dfb['CLUSTER']. unique()
@@ -117,13 +95,6 @@ elif len(clus) == 0:
 else:
     cols.write(f'**You are viewing data for: {clus}**')
 
-# ar = filtered_dfb['AREA']. unique()
-# if len(ar) == 0:
-#     cold.write(f'**No data for the thematic area(s) chosen**')
-# elif len(ar)>1:
-#      pass
-# elif len(ar)==1:
-#      cold.write(f'**The data set is filtered by: {ar} thematic area(s)**')
 
 act = filtered_dfb['ACTIVITY']. unique()
 
@@ -142,18 +113,21 @@ if plan ==0:
 else:
     perc = round((conducted/plan)*100)
 
+exp = round((int(t)/12)*100)
 if conducted>plan:
     st.warning(f"SOMETHING IS WRONG, IT SEEMS ACTIVITIES DONE ARE MORE THAN THOSE THAT WERE PLANNED FOR!!")
 
-col1,col2,col3,col4 = st.columns(4, gap='large')
+col1,col2,col3,col4, col5 = st.columns(5)#, gap='large')
 
 with col1:
     st.metric(label='**PLANNED**', value=f'{plan:,.0f}')
 with col2:
-    st.metric(label='**CONDUCTED**', value=f'{conducted:,.0f}')
+    st.metric(label='**DONE**', value=f'{conducted:,.0f}')
 with col3:
-    st.metric(label='**PERCENTAGE**', value=f'{perc:,.0f}')
+    st.metric(label='**%AGE**', value=f'{perc:,.0f}')
 with col4:
+    st.metric(label='**EXPECTED**', value=f'{exp}+'%'})
+with col5:
     st.metric(label='**NOT DONE**', value=f'{notdone:,.0f}')
 
 #######################################################################################################
