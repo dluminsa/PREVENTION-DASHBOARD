@@ -142,7 +142,7 @@ if not fac:
      with col2:
          st.metric(label='**DONE**', value=f'{conducted:,.0f}')
      with col3:
-         st.metric(label='**% AGE DONE**', value=f'{int(perc)} %')
+         st.metric(label='**%-AGE DONE**', value=f'{int(perc)} %')
      with col4:
          st.metric(label='**EXPECTED**', value=f'{exp} %')
      with col5:
