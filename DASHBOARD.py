@@ -37,7 +37,7 @@ except:
      st.stop()
 #st.write(dfb.columns)
 dfb= dfb[['CLUSTER','DISTRICT','ACTIVITY', 'DONE', 'WEEK','FACILITY', 'ID']]
-dfb[['CLUSTER','DISTRICT','FACILITY','ACTIVITY']] = dfb[['CLUSTER','DISTRICT','ACTIVITY']].astype(str)
+dfb[['CLUSTER','DISTRICT','FACILITY','ACTIVITY']] = dfb[['CLUSTER','DISTRICT','FACILITY','ACTIVITY']].astype(str)
 dfb[['ID', 'DNOE']] =  dfb[['ID', 'DNOE']].apply(pd.to_numeric, errors= 'coerce')
 dfb = dfb.drop_duplicates(subset = ['CLUSTER','DISTRICT','FACILITY','ACTIVITY', 'ID', 'DNOE'])
 file = r'PLANNED.csv'
