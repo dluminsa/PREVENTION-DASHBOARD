@@ -128,7 +128,9 @@ if not fac:
      
      plan = filtered_dfa['PLANNED'].sum()
      conducted = filtered_dfb['DONE'].sum()
+     conducteda = conducted
      notdone = plan - conducted
+     notdonea = notdone
      if plan ==0:
           perc =0
      else:
@@ -172,10 +174,11 @@ if not fac:
      #######################################################################################################
      #PIE CHART
      #st.divider()
+
      col1, col2,col3 = st.columns([1,4,1])
      labels = ['DONE', 'NOT DONE']
      # Values
-     values = [conducted, notdone]
+     values = [conducteda, notdonea]
      colors = ['blue', 'red']
      # Creating the pie chart with specified colors and hole
      fig = go.Figure(data=[go.Pie(labels=labels, values=values, textinfo='label+value', 
