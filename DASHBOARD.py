@@ -35,7 +35,7 @@ except:
      st.write(f"**Your network is poor, couldn't connect to the google sheet**")
      st.write(f"**TRY AGAIN WITH BETTER INTERNET**")
      st.stop()
-dfm[['CLUSTER', 'ACTIVITY']] = [['CLUSTER', 'ACTIVITY']].astype(str)
+dfm[['CLUSTER', 'ACTIVITY']] = dfm[['CLUSTER', 'ACTIVITY']].astype(str)
 dfm[['ID', 'AMOUNT']] = dfm[['ID', 'AMOUNT']].apply(pd.to_numeric, errors='coerce')
 dfm['DATE'] = pd.to_datetime(dfm['DATE'], errors='coerce')
 dfm = dfm.drop_duplicates(subset = [['CLUSTER', 'ACTIVITY', 'ID', 'AMOUNT', 'DATE']])
