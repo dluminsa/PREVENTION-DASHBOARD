@@ -38,7 +38,7 @@ except:
 dfm[['CLUSTER', 'ACTIVITY']] = dfm[['CLUSTER', 'ACTIVITY']].astype(str)
 dfm[['ID', 'AMOUNT']] = dfm[['ID', 'AMOUNT']].apply(pd.to_numeric, errors='coerce')
 dfm['DATE'] = pd.to_datetime(dfm['DATE'], errors='coerce')
-dfm = dfm.drop_duplicates(subset = [['CLUSTER', 'ACTIVITY', 'ID', 'AMOUNT', 'DATE']], keep='first')
+dfm = dfm.drop_duplicates(subset = ['CLUSTER', 'ACTIVITY', 'ID', 'AMOUNT', 'DATE'], keep='first')
 #st.write(dfb.columns)
 dfb= dfb[['CLUSTER','DISTRICT','ACTIVITY', 'DONE', 'WEEK','FACILITY', 'ID']]
 dfb[['CLUSTER','DISTRICT','FACILITY','ACTIVITY']] = dfb[['CLUSTER','DISTRICT','FACILITY','ACTIVITY']].astype(str)
