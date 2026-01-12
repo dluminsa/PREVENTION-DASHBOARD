@@ -34,10 +34,10 @@ prod = r'products.csv'
 df = pd.read_csv(prod)
 
 
-theme = ['STOCK STATUS', 'EXPENDITURE', 'CREDIT GIVEN']
+themes = ['STOCK STATUS', 'EXPENDITURE', 'CREDIT GIVEN']
 # Radio button to select a district
 
-theme = st.radio("**WHAT DO YOU WANT TO INPUT?**", list(theme.keys()),horizontal=True, index=None)
+theme = st.radio("**WHAT DO YOU WANT TO INPUT?**", themes,horizontal=True, index=None)
 
 # Show the facilities for the selected district and allow selection
 if theme is not None:
