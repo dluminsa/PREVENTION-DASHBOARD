@@ -31,7 +31,7 @@ st.markdown("<h4><b>SALES  TRACKER</b></h4>", unsafe_allow_html=True)
 done = ''
 district = ''
 prod = r'products.csv'
-df = pd.read_csv(products)
+df = pd.read_csv(prod)
 st.write(df)
 
 theme = ['CARE', 'TB', 'PMTCT', 'CQI']
