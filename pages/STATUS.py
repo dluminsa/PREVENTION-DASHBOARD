@@ -27,11 +27,12 @@ uniques = []
 facilitiesy = []
 
 st.markdown("<h4><b>SALES  TRACKER</b></h4>", unsafe_allow_html=True)
-st.markdown("<h6><b>USE THIS IF ONE ACTIVITY WAS DONEBY 2 OR MORE FACILITIES</b></h6>", unsafe_allow_html=True)
-st.markdown('***ALL ENTRIES ARE REQUIRED**')
 #sss
 done = ''
 district = ''
+prod = r'products.csv'
+df = pd.read_csv(products)
+st.write(df)
 
 theme = ['CARE', 'TB', 'PMTCT', 'CQI']
 # Radio button to select a district
