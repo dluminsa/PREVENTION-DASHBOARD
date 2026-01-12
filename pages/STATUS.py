@@ -47,7 +47,13 @@ if theme == 'STOCK STATUS':
     categories = df['category'].unique()
     
     category = st.radio(f"**Choose a category of the product:**", categories, horizontal=True, index=None)
-    choice = [category]
+     if not category:
+          st.stop()
+     else:
+          pass
+     dfa = df[df['category']==category].copy()
+     items = dfa['Product'].unique()
+     item =  st.select(f"**Choose a category of the product:**", categories, horizontal=True, index=None)
 
 def generate_unique_number():
     f = dt.datetime.now()  # Get the current datetime
