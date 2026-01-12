@@ -29,22 +29,25 @@ facilitiesy = []
 st.markdown("<h4><b>SALES  TRACKER</b></h4>", unsafe_allow_html=True)
 #sss
 done = ''
-district = ''
+category = ''
 prod = r'products.csv'
 df = pd.read_csv(prod)
 
 
 themes = ['STOCK STATUS', 'EXPENDITURE', 'CREDIT GIVEN']
-# Radio button to select a district
 
 theme = st.radio("**WHAT DO YOU WANT TO INPUT?**", themes,horizontal=True, index=None)
+if not theme:
+     st.stop()
+else:
+     pass
 
-# Show the facilities for the selected district and allow selection
-if theme is not None:
-    districts = theme[theme]
+# Show the facilities for the selected category and allow selection
+if theme == 'STOCK STATUS':
+    categories = df['category'].unique()
     
-    district = st.radio(f"**Choose a district in {theme} theme:**", districts, horizontal=True, index=None)
-    districts = [district]
+    category = st.radio(f"**Choose a category of the product:**", categories, horizontal=True, index=None)
+    choice = [category]
 
 def generate_unique_number():
     f = dt.datetime.now()  # Get the current datetime
@@ -61,7 +64,7 @@ if 'unique_number' not in st.session_state:
 else:
      pass
 
-if district:
+if category:
      area = st.radio('**CHOOSE A THEMATIC AREA**', theme, horizontal=True, index=None)
 else:
      st.stop()
@@ -75,7 +78,7 @@ if not area:
 else:
      pass
 
-facilities = FACILITIES[district]
+facilities = FACILITIES[category]
 
 today = date.today()
 activity = dfa[dfa['AREA']== area].copy()
@@ -97,13 +100,13 @@ datey = datetime.now().date()
 formatted = datey.strftime("%d-%m-%Y")
 if done: 
      state = activity[activity['ACTIVITY']==done]
-     statea = state[state['DISTRICT']== district].copy()
+     statea = state[state['category']== category].copy()
      statement = statea['STATEMENT'].unique()
      counts = statea['COUNT'].unique()
      try:
         statement = statement[0]
      except:
-          st.write('THIS ACTIVITY MAY NOT HAVE BEEN PLANNED FOR THIS DISTRICT')
+          st.write('THIS ACTIVITY MAY NOT HAVE BEEN PLANNED FOR THIS category')
           st.write('CONTACT YOUR TEAM LEAD FOR SUPPORT')
           st.stop()
      counts = counts[0]
@@ -121,7 +124,7 @@ if done:
      else:
           st.markdown(f'**NOTE: {statement}**')
 
-     #st.write(district)
+     #st.write(category)
      for i in range(num):
           colt,coly,colx = st.columns([1,1,1])
           colt.write(f'**FACILITY {i+1}**')
@@ -151,8 +154,8 @@ if done:
                pass
           themey = theme
           themes.append(themey)
-          districty = district
-          districts.append(districty)
+          categoryy = category
+          categorys.append(categoryy)
           weeky =int(week) + 13
           uniquey = int(st.session_state['unique_number'])
           areay = area
@@ -180,17 +183,17 @@ if done:
           else:
                st.stop()
                
-#st.write(f'{districts} this')
+#st.write(f'{categorys} this')
 
 if num==1:
-     districts = [districts[0]]
+     categorys = [categorys[0]]
      weeks = [weeks[0]]
      uniques = [uniques[0]]
      areas = [areas[0]]
      activit = [activit[0]]
      dates = [dates[0]]
 elif num>1:
-     districts = districts[0:num]
+     categorys = categorys[0:num]
      weeks = weeks[0:num]
      uniques = uniques[0:num]
      areas = areas[0:num]
@@ -200,7 +203,7 @@ elif num>1:
 df = pd.DataFrame({
           'DATE OF SUBMISSION': dates,
           'theme': themes,
-          'DISTRICT': districts,
+          'category': categorys,
           'FACILITY': facilitiesy,
           'AREA': areas,
           'ACTIVITY': activit,
@@ -230,7 +233,7 @@ col2.write('**SUMMARY**')
 
 cola,colb = st.columns(2)
 cola.write(f"**UNIQUE ID: {st.session_state['unique_number']}**")
-cola.markdown(f'**DISTRICT: {district}**')
+cola.markdown(f'**category: {category}**')
 colb.markdown(f'**FACILITY: {facility}**')
 colb.markdown(f'**THEMATIC AREA: {area}**')
 cola,colb,colc = st.columns(3)
