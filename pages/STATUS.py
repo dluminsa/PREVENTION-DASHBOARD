@@ -22,7 +22,7 @@ areas = []
 starts= []
 ends = []
 activit = []
-clusters = []
+themes = []
 uniques = []
 facilitiesy = []
 
@@ -32,18 +32,18 @@ done = ''
 district = ''
 prod = r'products.csv'
 df = pd.read_csv(prod)
-st.write(df)
 
-theme = ['CARE', 'TB', 'PMTCT', 'CQI']
+
+theme = ['STOCK STATUS', 'EXPENDITURE', 'CREDIT GIVEN']
 # Radio button to select a district
 
-# cluster = st.radio("**Choose a cluster:**", list(CLUSTER.keys()),horizontal=True, index=None)
-cluster = 'MASAKA'
+theme = st.radio("**WHAT DO YOU WANT TO INPUT?**", list(theme.keys()),horizontal=True, index=None)
+
 # Show the facilities for the selected district and allow selection
-if cluster is not None:
-    districts = CLUSTER[cluster]
+if theme is not None:
+    districts = theme[theme]
     
-    district = st.radio(f"**Choose a district in {cluster} cluster:**", districts, horizontal=True, index=None)
+    district = st.radio(f"**Choose a district in {theme} theme:**", districts, horizontal=True, index=None)
     districts = [district]
 
 def generate_unique_number():
@@ -149,8 +149,8 @@ if done:
                st.stop()
           else:
                pass
-          clustery = cluster
-          clusters.append(clustery)
+          themey = theme
+          themes.append(themey)
           districty = district
           districts.append(districty)
           weeky =int(week) + 13
@@ -199,7 +199,7 @@ elif num>1:
 
 df = pd.DataFrame({
           'DATE OF SUBMISSION': dates,
-          'CLUSTER': clusters,
+          'theme': themes,
           'DISTRICT': districts,
           'FACILITY': facilitiesy,
           'AREA': areas,
