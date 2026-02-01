@@ -42,7 +42,7 @@ if not theme:
 else:
      pass
 
-# Show the facilities for the selected category and allow selection
+st.stop()
 if theme == 'STOCK STATUS':
     categories = df['category'].unique()
     
