@@ -44,9 +44,9 @@ else:
 
 st.stop()
 if theme == 'STOCK STATUS':
-    categories = df['category'].unique()
+     categories = df['category'].unique()
     
-    category = st.radio(f"**Choose a category of the product:**", categories, horizontal=True, index=None)
+     category = st.radio(f"**Choose a category of the product:**", categories, horizontal=True, index=None)
      if not category:
           st.stop()
      else:
