@@ -52,7 +52,7 @@ if theme == 'STOCK STATUS':
           pass
      dfa = df[df['category']==category].copy()
      items = dfa['Product'].unique()
-     item =  st.select(f"**Choose a category of the product:**", categories, horizontal=True, index=None)
+     item =  st.selectbox(f"**Choose a category of the product:**", categories, horizontal=True, index=None)
      st.stop()
 def generate_unique_number():
     f = dt.datetime.now()  # Get the current datetime
