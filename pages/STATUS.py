@@ -42,7 +42,6 @@ if not theme:
 else:
      pass
 
-st.stop()
 if theme == 'STOCK STATUS':
      categories = df['category'].unique()
     
@@ -54,7 +53,7 @@ if theme == 'STOCK STATUS':
      dfa = df[df['category']==category].copy()
      items = dfa['Product'].unique()
      item =  st.select(f"**Choose a category of the product:**", categories, horizontal=True, index=None)
-
+     st.stop()
 def generate_unique_number():
     f = dt.datetime.now()  # Get the current datetime
     g = f.strftime("%Y-%m-%d %H:%M:%S.%f")  # Format datetime as a string including microseconds
