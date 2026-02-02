@@ -67,16 +67,17 @@ if theme == 'STOCK STATUS':
           st.stop()
 
      for item in items:
-          col1, col2 = st.columns([2,1])
+          col1, col2, col3 = st.columns(3)
           col1.write(f'**{item}**')
-          qty = col2.number_input(f'**STOCK IN OF {item}**', value=None, max_value=None, min_value=0,step=1, format="%d", key= f'stock_{item}')
+          col1, col2, col3 = st.columns(3)
+          qty = col1.number_input(f'**STOCK IN OF {item}**', value=None, max_value=None, min_value=0,step=1, format="%d", key= f'stock_{item}')
           qty2 = col2.number_input(f'**STOCK OUT OF {item}**', value=None, max_value=None, min_value=0,step=1, format="%d", key= f'stocko_{item}')
-          qty3 = col2.number_input(f'**STOCK AT HAND {item}**', value=None, max_value=None, min_value=0,step=1, format="%d", key= f'stocka_{item}')
-          if not qty:
+          qty3 = col3.number_input(f'**STOCK AT HAND {item}**', value=None, max_value=None, min_value=0,step=1, format="%d", key= f'stocka_{item}')
+          if qty is None:
                st.stop()
-          if not qty2:
+          if qty2 is None:
                st.stop()
-          if not qty3:
+          if qty3 is None:
                st.stop()
     
      st.stop()
