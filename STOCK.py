@@ -15,29 +15,23 @@ st.set_page_config(
      page_title= 'SALES TRACKER'
 )
                                                                         
-# numbers = []
-# amounts = []
-# dates = []
-# weeks = []
-# areas = []
-# starts= []
-# ends = []
-# activit = []
-# themes = []
-# uniques = []
-# facilitiesy = []
-if 'bbt' not in st.session_state:     
+today = date.today()
+if 'bbt' not in st.session_state or 'paid' not in st.session_state:  
      try:
         #cola,colb= st.columns(2)
         conn = st.connection('gsheets', type=GSheetsConnection)
         exist = conn.read(worksheet= 'GIVEN', usecols=list(range(4)),ttl=5)
+        paid = conn.read(worksheet= 'PAID', usecols=list(range(4)),ttl=5)
         bbt = exist.dropna(how='all')
+        paid = paid.dropna(how='all')
         st.session_state.bbt = bbt
+        st.session_state.paid = paid
      except:
          st.write("POOR NETWORK, COULDN'T CONNECT TO THE DATABASE")
          st.stop()
+
 dfl = st.session_state.bbt.copy()
-st.write(dfl)
+dfp = st.session_state.paid.copy()
 
 secrets = st.secrets["connections"]["gsheets"]
 credentials_info = {
@@ -82,7 +76,7 @@ prod = r'products.csv'
 df = pd.read_csv(prod)
 
 
-themes = ['STOCK STATUS', 'EXPENDITURE', 'CREDIT GIVEN']
+themes = ['STOCK STATUS', 'EXPENDITURE', 'CREDIT TRACKING']
 
 theme = st.radio("**WHAT DO YOU WANT TO INPUT?**", themes,horizontal=True, index=None)
 if not theme:
@@ -112,6 +106,9 @@ if theme == 'STOCK STATUS':
             st.stop()
      if startr > endr:
           st.warning("IMPOSSIBLE, START DATE CAN'T BE GREATER THAN END DATE")
+          st.stop()
+     elif endr > today:
+          st.warning("END DATE CANNOT BE IN THE FUTURE")
           st.stop()
      dfs = []
      for item in items:
@@ -175,18 +172,25 @@ elif theme == 'EXPENDITURE':
             st.stop()
      if not end:
             st.stop()
+     
      if start > end:
           st.warning("IMPOSSIBLE, START DATE CAN'T BE GREATER THAN END DATE")
           st.stop()
+     elif end > today:
+          st.warning("END DATE CANNOT BE IN THE FUTURE")
+          st.stop() 
 
-     amount = cola.number_input('**TOTAL AMOUNT SPENT**', value=None, max_value=None, min_value=500,step=1, format="%d", key= f'exp')
-     if amount is None:
+     amountx = cola.number_input('**TOTAL AMOUNT SPENT**', value=None, max_value=None, min_value=500,step=1, format="%d", key= f'exp')
+     if amountx is None:
             st.stop()
      datan = {
           'START': start,
           'END': end,
-          'AMOUNT': amount}
-     dfn = pd.DataFrame([datan])
+          'AMOUNT': amountx}
+     dfn = pd.DataFrame([datan]) 
+     st.write(f'You entered an expenditure of **{int(amountx):,}**')
+     st.write('**PLEASE CONFIRM THAT THE DATA YOU ENTERED IS CORRECT BEFORE SUBMITTING**')
+     cola, colb = st.columns([2,1])
      submitn = cola.button('**SUBMIT EXPENDITURE**', key='submit_expenditure')
      if submitn:
           try:
@@ -206,8 +210,8 @@ elif theme == 'EXPENDITURE':
           except:
                     st.write("Couldn't submit, poor network") 
                     st.write('Click the submit button again')
-elif theme == 'CREDIT GIVEN':
-    todo = st.radio(f"**Choose a category of the product:**", ['CREDIT GIVEN', 'CREDIT PAID'], horizontal=True, index=None)
+elif theme == 'CREDIT TRACKING':
+    todo = st.radio(f"**Choose a category of the product:**", ['CREDIT GIVEN', 'UPDATE PAYMENT'], horizontal=True, index=None)
     if not todo:
          st.stop()
     elif todo == 'CREDIT GIVEN':
@@ -215,7 +219,6 @@ elif theme == 'CREDIT GIVEN':
         cola, colb, colc = st.columns([2,1,2])
         startx = cola.date_input('FROM', value=None, key='start1')
         endx = colc.date_input('TO', value=None, key='end1')
-        cola, colb = st.columns([2,1])
         if not startx:
                 st.stop()
         if not endx:
@@ -223,9 +226,9 @@ elif theme == 'CREDIT GIVEN':
         if startx > endx:
             st.warning("IMPOSSIBLE, START DATE CAN'T BE GREATER THAN END DATE")
             st.stop()
-
-        amountx = cola.number_input('**TOTAL AMOUNT GIVEN**', value=None, max_value=None, min_value=500,step=1, format="%d", key= f'exp')
-        if amountx is None:
+        cola, colb = st.columns([2,1])
+        amounty = cola.number_input('**TOTAL AMOUNT GIVEN**', value=None, max_value=None, min_value=500,step=1, format="%d", key= f'exp')
+        if amounty is None:
                 st.stop()
     
         def generate_unique_number():
@@ -246,9 +249,13 @@ elif theme == 'CREDIT GIVEN':
         datay = {
             'START': startx,
             'END': endx,
-            'AMOUNT': amountx,
+            'AMOUNT': amounty,
             'ID': unique}
         dfx = pd.DataFrame([datay])
+        st.write(f'You entered **{int(amounty):,}** for the credit with ID **{unique}**')
+        st.write('**PLEASE CONFIRM THAT THE DATA YOU ENTERED IS CORRECT BEFORE SUBMITTING**')
+
+        cola, colb = st.columns([2,1])
         submitx = cola.button('**SUBMIT CREDIT GIVEN**', key ='submit_credit')
         if submitx:
           try:
@@ -268,7 +275,7 @@ elif theme == 'CREDIT GIVEN':
           except:
                     st.write("Couldn't submit, poor network") 
                     st.write('Click the submit button again')
-    elif todo == 'CREDIT PAID':
+    elif todo == 'UPDATE PAYMENT':
         st.write('**EACH CREDIT GIVEN WILL BE TRACKED BY ITS UNIQUE ID**')
         dfl['ID'] = pd.to_numeric(dfl['ID'], errors='coerce')
         cola, colb, colc = st.columns([2,1,2])
@@ -279,8 +286,10 @@ elif theme == 'CREDIT GIVEN':
             st.warning("THE ID YOU ENTERED DOESN'T EXIST")
             st.stop()
         else:
-              debt = dfl[dfl['ID']==unique]['AMOUNT'].values[0]
-              st.write(f'THE AMOUNT OWED FOR THE ID {unique} IS **{int(debt):,}**')
+              debta = dfl[dfl['ID']==unique]['AMOUNT'].values[0]
+              paid = dfp[dfp['ID']==unique]['AMOUNT'].sum()
+              debt = debta - paid
+              st.write(f'THE AMOUNT OWED FOR THE ID {unique} IS: **{int(debt):,}**')
         cola, colb = st.columns([1,2])
         amountz = cola.number_input('**TOTAL AMOUNT PAID**', value=None, max_value=None, min_value=1,step=1, format="%d", key= f'exp3')
         if not amountz:
@@ -289,13 +298,17 @@ elif theme == 'CREDIT GIVEN':
         datex = cola.date_input('DATE PAID', value=None, key='start3')
         if not datex:
                 st.stop()
-        submitz = cola.button('**SUBMIT CREDIT PAID**', key ='submit_credit_paid')
+
         dataz ={
                'ID': unique,
                'AMOUNT': amountz,
                'DATE': datex
         }
         dfz = pd.DataFrame([dataz])
+        st.write(f'You entered **{int(amountz):,}** for the credit with ID **{unique}**')
+        st.write('**PLEASE CONFIRM THAT THE DATA YOU ENTERED IS CORRECT BEFORE SUBMITTING**')
+        cola, colb = st.columns([2,1])
+        submitz = cola.button('**SUBMIT UPDATE PAYMENT**', key ='submit_credit_paid')
         if submitz:
           try:
                st. write('SUBMITING')
@@ -316,7 +329,7 @@ elif theme == 'CREDIT GIVEN':
                     st.write('Click the submit button again')
           
 
-today = date.today()
+
 
 
 # if submit:
