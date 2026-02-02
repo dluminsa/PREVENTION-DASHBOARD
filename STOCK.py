@@ -142,7 +142,6 @@ if theme == 'STOCK STATUS':
           data = pd.DataFrame([data])
           dfs.append(data)
      df = pd.concat(dfs, ignore_index=True)
-     st.write(df)
      cola, colb = st.columns([2,1])
      submit = cola.button('**SUBMIT STOCK DATA**', key='submit_stock')
      if submit:
