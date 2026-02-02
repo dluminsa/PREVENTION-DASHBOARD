@@ -15,18 +15,29 @@ st.set_page_config(
      page_title= 'SALES TRACKER'
 )
                                                                         
-numbers = []
-amounts = []
-dates = []
-weeks = []
-areas = []
-starts= []
-ends = []
-activit = []
-themes = []
-uniques = []
-facilitiesy = []
-
+# numbers = []
+# amounts = []
+# dates = []
+# weeks = []
+# areas = []
+# starts= []
+# ends = []
+# activit = []
+# themes = []
+# uniques = []
+# facilitiesy = []
+if 'bbt' not in st.session_state:     
+     try:
+        #cola,colb= st.columns(2)
+        conn = st.connection('gsheets', type=GSheetsConnection)
+        exist = conn.read(worksheet= 'GIVEN', usecols=list(range(4)),ttl=5)
+        bbt = exist.dropna(how='all')
+        st.session_state.bbt = bbt
+     except:
+         st.write("POOR NETWORK, COULDN'T CONNECT TO THE DATABASE")
+         st.stop()
+dfl = st.session_state.bbt.copy()
+st.write(dfl)
 
 secrets = st.secrets["connections"]["gsheets"]
 credentials_info = {
@@ -135,6 +146,7 @@ if theme == 'STOCK STATUS':
           dfs.append(data)
      df = pd.concat(dfs, ignore_index=True)
      st.write(df)
+     cola, colb = st.columns([2,1])
      submit = cola.button('**SUBMIT STOCK DATA**', key='submit_stock')
      if submit:
           try:
@@ -258,11 +270,18 @@ elif theme == 'CREDIT GIVEN':
                     st.write('Click the submit button again')
     elif todo == 'CREDIT PAID':
         st.write('**EACH CREDIT GIVEN WILL BE TRACKED BY ITS UNIQUE ID**')
+        dfl['ID'] = pd.to_numeric(dfl['ID'], errors='coerce')
         cola, colb, colc = st.columns([2,1,2])
         unique = cola.number_input('**ID FOR THE CREDIT BEING PAID FOR**', value=None, max_value=None, min_value=500,step=1, format="%d", key= f'exp2')
         if not unique:
                 st.stop()
-        cola, colb = st.columns([2,1])
+        if unique not in dfl['ID'].values:
+            st.warning("THE ID YOU ENTERED DOESN'T EXIST")
+            st.stop()
+        else:
+              debt = dfl[dfl['ID']==unique]['AMOUNT'].values[0]
+              st.write(f'THE AMOUNT OWED FOR THE ID {unique} IS **{int(debt):,}**')
+        cola, colb = st.columns([1,2])
         amountz = cola.number_input('**TOTAL AMOUNT PAID**', value=None, max_value=None, min_value=1,step=1, format="%d", key= f'exp3')
         if not amountz:
                 st.stop()
@@ -280,7 +299,7 @@ elif theme == 'CREDIT GIVEN':
         if submitz:
           try:
                st. write('SUBMITING')
-               sheet2 = spreadsheet.worksheet("EXPENDITURE")
+               sheet2 = spreadsheet.worksheet("PAID")
                dfz[['DATE']] = dfz[['DATE']].astype(str)
                rows_to_append = dfz.values.tolist()
                
