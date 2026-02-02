@@ -54,21 +54,93 @@ if theme == 'STOCK STATUS':
      items = dfa['Product'].unique()
      item =  st.selectbox(f"**Choose a category of the product:**", categories, horizontal=True, index=None)
      st.stop()
-def generate_unique_number():
-    f = dt.datetime.now()  # Get the current datetime
-    g = f.strftime("%Y-%m-%d %H:%M:%S.%f")  # Format datetime as a string including microseconds
-    h = g.split('.')[1]  # Extract the microseconds part of the formatted string
-    j = h[1:5]  # Get the second through fifth digits of the microseconds part
-    return int(j)  # Convert the sliced string to an integer
+elif theme == 'EXPENDITURE':
+     st.write('**PERIOD**')
+     cola, colb, colc = st.columns([2,1,2])
+     start = cola.date_input('FROM', value=None, key='start')
+     end = colc.date_input('TO', value=None, key='end')
+     cola, colb = st.columns([2,1])
+     if not start:
+            st.stop()
+     if not end:
+            st.stop()
+     if start > end:
+          st.warning("IMPOSSIBLE, START DATE CAN'T BE GREATER THAN END DATE")
+          st.stop()
 
-# Initialize the unique number in session state if it doesn't exist
-if 'unique_number' not in st.session_state:
-    st.session_state['unique_number'] = generate_unique_number()
-    unique = st.session_state['unique_number'] 
+     amount = cola.number_input('**TOTAL AMOUNT SPENT**', value=None, max_value=None, min_value=500,step=1, format="%d", key= f'exp')
+     if not amount:
+            st.stop()
+     submit = cola.button('**SUBMIT EXPENDITURE**')
+     if submit:
+            st.write('SUBMITTING...')
+            time.sleep(1)
+            st.success(f'You have submitted an expenditure of {amount} from {start} to {end}')
+            st.stop()
+elif theme == 'CREDIT GIVEN':
+    todo = st.radio(f"**Choose a category of the product:**", ['CREDIT GIVEN', 'CREDIT PAID'], horizontal=True, index=None)
+    if not todo:
+         st.stop()
+    elif todo == 'CREDIT GIVEN':
+        st.write('**PERIOD WHEN THE ITEMS WERE GIVEN OUT**')
+        cola, colb, colc = st.columns([2,1,2])
+        startx = cola.date_input('FROM', value=None, key='start1')
+        endx = colc.date_input('TO', value=None, key='end1')
+        cola, colb = st.columns([2,1])
+        if not startx:
+                st.stop()
+        if not endx:
+            st.stop()
+        if startx > endx:
+            st.warning("IMPOSSIBLE, START DATE CAN'T BE GREATER THAN END DATE")
+            st.stop()
 
-else:
-     pass
+        amountx = cola.number_input('**TOTAL AMOUNT GIVEN**', value=None, max_value=None, min_value=500,step=1, format="%d", key= f'exp')
+        if not amountx:
+                st.stop()
+    
+        def generate_unique_number():
+            f = dt.datetime.now()  # Get the current datetime
+            g = f.strftime("%Y-%m-%d %H:%M:%S.%f")  # Format datetime as a string including microseconds
+            h = g.split('.')[1]  # Extract the microseconds part of the formatted string
+            j = h[1:5]  # Get the second through fifth digits of the microseconds part
+            return int(j)  # Convert the sliced string to an integer
 
+        # Initialize the unique number in session state if it doesn't exist
+        if 'unique_number' not in st.session_state:
+            st.session_state['unique_number'] = generate_unique_number()
+            unique = st.session_state['unique_number'] 
+
+        else:
+            pass
+        unique = st.session_state['unique_number']
+        submitx = cola.button('**SUBMIT CREDIT GIVEN**', key ='submit_credit')
+        if submitx:
+                st.write('SUBMITTING...')
+                time.sleep(1)
+                st.success(f'You have submitted a credit of {amountx} from {startx} to {endx}')
+                st.stop()
+    elif todo == 'CREDIT PAID':
+        st.write('**EACH CREDIT GIVEN WILL BE TRACKED BY ITS UNIQUE ID**')
+        cola, colb, colc = st.columns([2,1,2])
+        unique = cola.number_input('**ID FOR THE CREDIT BEING PAID FOR**', value=None, max_value=None, min_value=500,step=1, format="%d", key= f'exp2')
+        if not unique:
+                st.stop()
+        cola, colb = st.columns([2,1])
+        amountz = cola.number_input('**TOTAL AMOUNT PAID**', value=None, max_value=None, min_value=1,step=1, format="%d", key= f'exp3')
+        if not amountz:
+                st.stop()
+        cola, colb, colc = st.columns([2,1,2])
+        datex = cola.date_input('DATE PAID', value=None, key='start3')
+        if not datex:
+                st.stop()
+        submitz = cola.button('**SUBMIT CREDIT PAID**', key ='submit_credit_paid')
+        if submitz:
+                st.write('SUBMITTING...')
+                time.sleep(1)
+                st.success(f'You have submitted a credit payment of {amountz} for ID {unique} on {datex}')
+                st.stop()
+         
 if category:
      area = st.radio('**CHOOSE A THEMATIC AREA**', theme, horizontal=True, index=None)
 else:
