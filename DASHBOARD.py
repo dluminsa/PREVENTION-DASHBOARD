@@ -27,6 +27,42 @@ themes = []
 uniques = []
 facilitiesy = []
 
+
+secrets = st.secrets["connections"]["gsheets"]
+credentials_info = {
+        "type": secrets["type"],
+        "project_id": secrets["project_id"],
+        "private_key_id": secrets["private_key_id"],
+        "private_key": secrets["private_key"],
+        "client_email": secrets["client_email"],
+        "client_id": secrets["client_id"],
+        "auth_uri": secrets["auth_uri"],
+        "token_uri": secrets["token_uri"],
+        "auth_provider_x509_cert_url": secrets["auth_provider_x509_cert_url"],
+        "client_x509_cert_url": secrets["client_x509_cert_url"]
+    }
+        
+try:
+    # Define the scopes needed for your application
+    scopes = ["https://www.googleapis.com/auth/spreadsheets",
+            "https://www.googleapis.com/auth/drive"]
+    
+     
+    credentials = Credentials.from_service_account_info(credentials_info, scopes=scopes)
+        
+        # Authorize and access Google Sheets
+    client = gspread.authorize(credentials)
+        
+        # Open the Google Sheet by URL
+    spreadsheetu = "https://docs.google.com/spreadsheets/d/1XzTOKXJuG28J4TYsjjuOUOv8Ra1zmnXCRekhmNumVXY/edit?gid=662839431#gid=662839431"     
+    spreadsheet = client.open_by_url(spreadsheetu)
+except Exception as e:
+        # Log the error message
+    st.write(f"CHECK: {e}")
+    st.write(traceback.format_exc())
+    st.write("COULDN'T CONNECT TO GOOGLE SHEET, TRY AGAIN")
+    st.stop()
+
 st.markdown("<h4><b>SALES  TRACKER</b></h4>", unsafe_allow_html=True)
 #sss
 done = ''
@@ -122,6 +158,11 @@ elif theme == 'EXPENDITURE':
      amount = cola.number_input('**TOTAL AMOUNT SPENT**', value=None, max_value=None, min_value=500,step=1, format="%d", key= f'exp')
      if amount is None:
             st.stop()
+     datan = {
+          'START': start,
+          'END': end,
+          'AMOUNT': amount}
+     df = pd.DataFrame([datan])
      submit = cola.button('**SUBMIT EXPENDITURE**')
      if submit:
             st.write('SUBMITTING...')
@@ -165,6 +206,12 @@ elif theme == 'CREDIT GIVEN':
         else:
             pass
         unique = st.session_state['unique_number']
+        datay = {
+            'START': startx,
+            'END': endx,
+            'AMOUNT': amountx,
+            'ID': unique}
+        df = pd.DataFrame([datay])
         submitx = cola.button('**SUBMIT CREDIT GIVEN**', key ='submit_credit')
         if submitx:
                 st.write('SUBMITTING...')
@@ -186,6 +233,12 @@ elif theme == 'CREDIT GIVEN':
         if not datex:
                 st.stop()
         submitz = cola.button('**SUBMIT CREDIT PAID**', key ='submit_credit_paid')
+        dataz ={
+               'ID': unique,
+               'AMOUNT': amountz,
+               'DATE': datex
+        }
+        dfz = pd.DataFrame([dataz])
         if submitz:
                 st.write('SUBMITTING...')
                 time.sleep(1)
@@ -195,41 +248,6 @@ elif theme == 'CREDIT GIVEN':
 
 today = date.today()
 
-
-secrets = st.secrets["connections"]["gsheets"]
-credentials_info = {
-        "type": secrets["type"],
-        "project_id": secrets["project_id"],
-        "private_key_id": secrets["private_key_id"],
-        "private_key": secrets["private_key"],
-        "client_email": secrets["client_email"],
-        "client_id": secrets["client_id"],
-        "auth_uri": secrets["auth_uri"],
-        "token_uri": secrets["token_uri"],
-        "auth_provider_x509_cert_url": secrets["auth_provider_x509_cert_url"],
-        "client_x509_cert_url": secrets["client_x509_cert_url"]
-    }
-        
-try:
-    # Define the scopes needed for your application
-    scopes = ["https://www.googleapis.com/auth/spreadsheets",
-            "https://www.googleapis.com/auth/drive"]
-    
-     
-    credentials = Credentials.from_service_account_info(credentials_info, scopes=scopes)
-        
-        # Authorize and access Google Sheets
-    client = gspread.authorize(credentials)
-        
-        # Open the Google Sheet by URL
-    spreadsheetu = " https://docs.google.com/spreadsheets/d/1IgIltX9_2yvppb4YYoebRyyYwCqYZng62h0cRYPmAdE"     
-    spreadsheet = client.open_by_url(spreadsheetu)
-except Exception as e:
-        # Log the error message
-    st.write(f"CHECK: {e}")
-    st.write(traceback.format_exc())
-    st.write("COULDN'T CONNECT TO GOOGLE SHEET, TRY AGAIN")
-    st.stop()
 
 if submit:
      try:
