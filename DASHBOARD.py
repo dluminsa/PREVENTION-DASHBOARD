@@ -52,7 +52,33 @@ if theme == 'STOCK STATUS':
           pass
      dfa = df[df['category']==category].copy()
      items = dfa['Product'].unique()
-     item =  st.selectbox(f"**Choose a category of the product:**", categories, horizontal=True, index=None)
+     items = list(items)
+     st.write('**PERIOD OF STOCK COUNT**')
+     cola, colb, colc = st.columns([2,1,2])
+     startr = cola.date_input('FROM', value=None, key='startd')
+     endr = colc.date_input('TO', value=None, key='endd')
+     cola, colb = st.columns([2,1])
+     if not startr:
+            st.stop()
+     if not endr:
+            st.stop()
+     if startr > endr:
+          st.warning("IMPOSSIBLE, START DATE CAN'T BE GREATER THAN END DATE")
+          st.stop()
+
+     for item in items:
+          col1, col2 = st.columns([2,1])
+          col1.write(f'**{item}**')
+          qty = col2.number_input(f'**STOCK IN OF {item}**', value=None, max_value=None, min_value=0,step=1, format="%d", key= f'stock_{item}')
+          qty2 = col2.number_input(f'**STOCK OUT OF {item}**', value=None, max_value=None, min_value=0,step=1, format="%d", key= f'stocko_{item}')
+          qty3 = col2.number_input(f'**STOCK AT HAND {item}**', value=None, max_value=None, min_value=0,step=1, format="%d", key= f'stocka_{item}')
+          if not qty:
+               st.stop()
+          if not qty2:
+               st.stop()
+          if not qty3:
+               st.stop()
+    
      st.stop()
 elif theme == 'EXPENDITURE':
      st.write('**PERIOD**')
