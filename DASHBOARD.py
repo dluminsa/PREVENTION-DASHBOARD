@@ -137,10 +137,22 @@ if theme == 'STOCK STATUS':
      st.write(df)
      submit = cola.button('**SUBMIT STOCK DATA**', key='submit_stock')
      if submit:
-          st.write('SUBMITTING...')
-          time.sleep(1)
-          st.success(f'You have submitted stock data for {len(items)} items from {startr} to {endr}')
-          st.stop()
+          try:
+               st. write('SUBMITING')
+               sheet1 = spreadsheet.worksheet("STOCK")
+               df[['START', 'END']] = df[['START', 'END']].astype(str)
+               rows_to_append = df.values.tolist()
+               sheet1.append_rows(rows_to_append, value_input_option='RAW')
+               st.success('Your data above has been submitted')
+               st.write('RELOADING PAGE')
+               time.sleep(1)
+               st.markdown("""
+               <meta http-equiv="refresh" content="0">
+                    """, unsafe_allow_html=True)
+
+          except:
+                    st.write("Couldn't submit, poor network") 
+                    st.write('Click the submit button again')
 elif theme == 'EXPENDITURE':
      st.write('**PERIOD**')
      cola, colb, colc = st.columns([2,1,2])
@@ -162,13 +174,26 @@ elif theme == 'EXPENDITURE':
           'START': start,
           'END': end,
           'AMOUNT': amount}
-     df = pd.DataFrame([datan])
-     submit = cola.button('**SUBMIT EXPENDITURE**')
-     if submit:
-            st.write('SUBMITTING...')
-            time.sleep(1)
-            st.success(f'You have submitted an expenditure of {amount} from {start} to {end}')
-            st.stop()
+     dfn = pd.DataFrame([datan])
+     submitn = cola.button('**SUBMIT EXPENDITURE**', key='submit_expenditure')
+     if submitn:
+          try:
+               st. write('SUBMITING')
+               sheet2 = spreadsheet.worksheet("EXPENDITURE")
+               dfn[['START', 'END']] = dfn[['START', 'END']].astype(str)
+               rows_to_append = dfn.values.tolist()
+               
+               sheet2.append_rows(rows_to_append, value_input_option='RAW')
+               st.success('Your data above has been submitted')
+               st.write('RELOADING PAGE')
+               time.sleep(1)
+               st.markdown("""
+               <meta http-equiv="refresh" content="0">
+                    """, unsafe_allow_html=True)
+
+          except:
+                    st.write("Couldn't submit, poor network") 
+                    st.write('Click the submit button again')
 elif theme == 'CREDIT GIVEN':
     todo = st.radio(f"**Choose a category of the product:**", ['CREDIT GIVEN', 'CREDIT PAID'], horizontal=True, index=None)
     if not todo:
@@ -211,13 +236,26 @@ elif theme == 'CREDIT GIVEN':
             'END': endx,
             'AMOUNT': amountx,
             'ID': unique}
-        df = pd.DataFrame([datay])
+        dfx = pd.DataFrame([datay])
         submitx = cola.button('**SUBMIT CREDIT GIVEN**', key ='submit_credit')
         if submitx:
-                st.write('SUBMITTING...')
-                time.sleep(1)
-                st.success(f'You have submitted a credit of {amountx} from {startx} to {endx}')
-                st.stop()
+          try:
+               st. write('SUBMITING')
+               sheet2 = spreadsheet.worksheet("GIVEN")
+               dfx[['START', 'END']] = dfx[['START', 'END']].astype(str)
+               rows_to_append = dfx.values.tolist()
+               
+               sheet2.append_rows(rows_to_append, value_input_option='RAW')
+               st.success('Your data above has been submitted')
+               st.write('RELOADING PAGE')
+               time.sleep(1)
+               st.markdown("""
+               <meta http-equiv="refresh" content="0">
+                    """, unsafe_allow_html=True)
+
+          except:
+                    st.write("Couldn't submit, poor network") 
+                    st.write('Click the submit button again')
     elif todo == 'CREDIT PAID':
         st.write('**EACH CREDIT GIVEN WILL BE TRACKED BY ITS UNIQUE ID**')
         cola, colb, colc = st.columns([2,1,2])
@@ -240,30 +278,43 @@ elif theme == 'CREDIT GIVEN':
         }
         dfz = pd.DataFrame([dataz])
         if submitz:
-                st.write('SUBMITTING...')
-                time.sleep(1)
-                st.success(f'You have submitted a credit payment of {amountz} for ID {unique} on {datex}')
-                st.stop()
-         
+          try:
+               st. write('SUBMITING')
+               sheet2 = spreadsheet.worksheet("EXPENDITURE")
+               dfz[['DATE']] = dfz[['DATE']].astype(str)
+               rows_to_append = dfz.values.tolist()
+               
+               sheet2.append_rows(rows_to_append, value_input_option='RAW')
+               st.success('Your data above has been submitted')
+               st.write('RELOADING PAGE')
+               time.sleep(1)
+               st.markdown("""
+               <meta http-equiv="refresh" content="0">
+                    """, unsafe_allow_html=True)
+
+          except:
+                    st.write("Couldn't submit, poor network") 
+                    st.write('Click the submit button again')
+          
 
 today = date.today()
 
 
-if submit:
-     try:
-          st. write('SUBMITING')
-          sheet1 = spreadsheet.worksheet("DONE")
-          df[['START DATE', 'END DATE']] = df[['START DATE', 'END DATE']].astype(str)
-          rows_to_append = df.values.tolist()
+# if submit:
+#      try:
+#           st. write('SUBMITING')
+#           sheet1 = spreadsheet.worksheet("DONE")
+#           df[['START DATE', 'END DATE']] = df[['START DATE', 'END DATE']].astype(str)
+#           rows_to_append = df.values.tolist()
           
-          sheet1.append_rows(rows_to_append, value_input_option='RAW')
-          st.success('Your data above has been submitted')
-          st.write('RELOADING PAGE')
-          time.sleep(1)
-          st.markdown("""
-          <meta http-equiv="refresh" content="0">
-               """, unsafe_allow_html=True)
+#           sheet1.append_rows(rows_to_append, value_input_option='RAW')
+#           st.success('Your data above has been submitted')
+#           st.write('RELOADING PAGE')
+#           time.sleep(1)
+#           st.markdown("""
+#           <meta http-equiv="refresh" content="0">
+#                """, unsafe_allow_html=True)
 
-     except:
-               st.write("Couldn't submit, poor network") 
-               st.write('Click the submit button again')
+#      except:
+#                st.write("Couldn't submit, poor network") 
+#                st.write('Click the submit button again')
