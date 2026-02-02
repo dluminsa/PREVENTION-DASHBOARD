@@ -5,6 +5,7 @@ import streamlit as st
 import numpy as np
 import time
 import gspread
+import traceback
 import datetime as dt
 from datetime import datetime, date
 from google.oauth2.service_account import Credentials
@@ -65,9 +66,13 @@ if theme == 'STOCK STATUS':
      if startr > endr:
           st.warning("IMPOSSIBLE, START DATE CAN'T BE GREATER THAN END DATE")
           st.stop()
-
+     dfs = []
      for item in items:
+          sell = dfa[dfa['Product']==item].copy()
+          buy = sell['Buy'].sum()
+          sell = sell['Sale'].sum()
           col1, col2, col3 = st.columns(3)
+          item = item.strip()
           col1.write(f'**{item}**')
           col1, col2, col3 = st.columns(3)
           qty = col1.number_input(f'**STOCK IN OF {item}**', value=None, max_value=None, min_value=0,step=1, format="%d", key= f'stock_{item}')
@@ -79,8 +84,27 @@ if theme == 'STOCK STATUS':
                st.stop()
           if qty3 is None:
                st.stop()
-    
-     st.stop()
+          data = {
+               'START': startr,
+               'END': endr,
+               'CATEGORY': category,
+               'ITEM': item,
+               'IN': qty,
+               'OUT': qty2,
+               'HAND': qty3,
+               'SALE': int(sell),
+               'BUY': int(buy)
+          }
+          data = pd.DataFrame([data])
+          dfs.append(data)
+     df = pd.concat(dfs, ignore_index=True)
+     st.write(df)
+     submit = cola.button('**SUBMIT STOCK DATA**', key='submit_stock')
+     if submit:
+          st.write('SUBMITTING...')
+          time.sleep(1)
+          st.success(f'You have submitted stock data for {len(items)} items from {startr} to {endr}')
+          st.stop()
 elif theme == 'EXPENDITURE':
      st.write('**PERIOD**')
      cola, colb, colc = st.columns([2,1,2])
@@ -96,7 +120,7 @@ elif theme == 'EXPENDITURE':
           st.stop()
 
      amount = cola.number_input('**TOTAL AMOUNT SPENT**', value=None, max_value=None, min_value=500,step=1, format="%d", key= f'exp')
-     if not amount:
+     if amount is None:
             st.stop()
      submit = cola.button('**SUBMIT EXPENDITURE**')
      if submit:
@@ -123,7 +147,7 @@ elif theme == 'CREDIT GIVEN':
             st.stop()
 
         amountx = cola.number_input('**TOTAL AMOUNT GIVEN**', value=None, max_value=None, min_value=500,step=1, format="%d", key= f'exp')
-        if not amountx:
+        if amountx is None:
                 st.stop()
     
         def generate_unique_number():
@@ -168,187 +192,9 @@ elif theme == 'CREDIT GIVEN':
                 st.success(f'You have submitted a credit payment of {amountz} for ID {unique} on {datex}')
                 st.stop()
          
-if category:
-     area = st.radio('**CHOOSE A THEMATIC AREA**', theme, horizontal=True, index=None)
-else:
-     st.stop()
-
-planned = r'PLANNED.csv'
-
-dfa = pd.read_csv(planned)
-
-if not area:
-     st.stop()
-else:
-     pass
-
-facilities = FACILITIES[category]
 
 today = date.today()
-activity = dfa[dfa['AREA']== area].copy()
-activities = activity['ACTIVITY'].unique()
-col1,col2 = st.columns([2,1])
-if area:
-      done = col1.selectbox(f'**SELECT THE {area} ACTIVITY YOU ARE PAYING FOR**', activities, index=None)
-      doned = done
-else:
-     st.stop()
 
-if not done:
-     st.stop()
-elif done:
-     pass
-current_time = time.localtime()
-week = time.strftime("%V", current_time)
-datey = datetime.now().date()
-formatted = datey.strftime("%d-%m-%Y")
-if done: 
-     state = activity[activity['ACTIVITY']==done]
-     statea = state[state['category']== category].copy()
-     statement = statea['STATEMENT'].unique()
-     counts = statea['COUNT'].unique()
-     try:
-        statement = statement[0]
-     except:
-          st.write('THIS ACTIVITY MAY NOT HAVE BEEN PLANNED FOR THIS category')
-          st.write('CONTACT YOUR TEAM LEAD FOR SUPPORT')
-          st.stop()
-     counts = counts[0]
-     cola, colb = st.columns(2)
-     num = cola.number_input('**HOW MANY FACILITIES CONDUCTED THIS ACTIVITY?**',value=None, step=1)
-
-     if not num:
-          st.stop()
-     elif num>10:
-          st.warning('Maximum can be 10')
-          st.stop()
-     elif num == 0:
-          st.warning("CAN'T BE ZERO")
-          st.stop()
-     else:
-          st.markdown(f'**NOTE: {statement}**')
-
-     #st.write(category)
-     for i in range(num):
-          colt,coly,colx = st.columns([1,1,1])
-          colt.write(f'**FACILITY {i+1}**')
-          
-          coly,colz = st.columns(2)
-          facility = coly.selectbox(f"**Name of facility {i+1}:**", facilities, index=None, key=f'y{i}')
-          if not facility:
-               st.stop()
-          else:
-               pass
-          colt,coly,colx = st.columns([1,1,1])
-          number = colt.number_input(label=f'**{counts}**', value=None, max_value=None, min_value=None,step=1, format="%d", key=f'{i}b')
-          start = coly.date_input(label='**ACTIVITY START DATE**', value=None, key=f'a{i}')
-          end = colx.date_input(label='**END DATE**',value=None, key= f'b{i}')
-          amount = colt.number_input(label='**HOW MUCH ARE YOU PAYING FOR THIS FACILITY**', value=None, max_value= None, min_value=10000,step=1, format="%d", key= f'{i}a')
-          if not start:
-               st.stop()
-          else:
-               pass
-          if not end:
-               st.stop()
-          else:
-               pass
-          if not amount:
-               st.stop()
-          else:
-               pass
-          themey = theme
-          themes.append(themey)
-          categoryy = category
-          categorys.append(categoryy)
-          weeky =int(week) + 13
-          uniquey = int(st.session_state['unique_number'])
-          areay = area
-          doney = done
-          formattedy = formatted
-          weeks.append(weeky)
-          uniques.append(uniquey)
-          areas.append(areay)
-          activit.append(doney)
-          dates.append(formattedy)
-
-          if number and start and end:
-               if start > end:
-                    st.warning("IMPOSSIBLE, ACTIVITY START DATE CAN'T BE GREATER THAN END DATE")
-                    st.stop()
-               elif end>today:
-                    st.warning("IMPOSSIBLE, CHECK END DATE, IT'S GREATER THAN TODAY")
-                    st.stop()
-               else:
-                    numbers.append(number)
-                    facilitiesy.append(facility)
-                    starts.append(start)
-                    ends.append(end)
-                    amounts.append(amount)
-          else:
-               st.stop()
-               
-#st.write(f'{categorys} this')
-
-if num==1:
-     categorys = [categorys[0]]
-     weeks = [weeks[0]]
-     uniques = [uniques[0]]
-     areas = [areas[0]]
-     activit = [activit[0]]
-     dates = [dates[0]]
-elif num>1:
-     categorys = categorys[0:num]
-     weeks = weeks[0:num]
-     uniques = uniques[0:num]
-     areas = areas[0:num]
-     activit = activit[0:num]
-     dates = dates[0:num]
-
-df = pd.DataFrame({
-          'DATE OF SUBMISSION': dates,
-          'theme': themes,
-          'category': categorys,
-          'FACILITY': facilitiesy,
-          'AREA': areas,
-          'ACTIVITY': activit,
-          'DONE': numbers,
-          'START DATE': starts,
-          'ID': uniques,
-          'END DATE': ends,
-          'WEEK': weeks,
-          'AMOUNT': amounts
-          })                                         
-                                         
-dfd = df[df.duplicated(subset='FACILITY')]
-check = dfd.shape[0]
-
-if check>0:
-     dfd['FACILITY'] = dfd['FACILITY'].astype(str)
-     disa = ', '.join(dfd['FACILITY'].unique())
-     st.warning(f'**You repeated {disa}**')
-     st.write("**ADD ALL THEIR TOTALS DONE AND SUBMIT THEM AT ONCE**")
-     st.stop()
-else:
-     pass
-
-st.write(f"UNIQUE ID: {st.session_state['unique_number']}")
-col1,col2, col3 = st.columns([1,1,2])
-col2.write('**SUMMARY**')
-
-cola,colb = st.columns(2)
-cola.write(f"**UNIQUE ID: {st.session_state['unique_number']}**")
-cola.markdown(f'**category: {category}**')
-colb.markdown(f'**FACILITY: {facility}**')
-colb.markdown(f'**THEMATIC AREA: {area}**')
-cola,colb,colc = st.columns(3)
-colb.write(f'**ACTIVITY: {done}**')
-
-dfa = df[['FACILITY', 'DONE', 'START DATE', 'END DATE', 'AMOUNT']].copy()
-
-uniques = df['FACILITY']
-cola,colb = st.columns([3,1])
-cola.write(dfa) 
-submit = colb.button('**SUBMIT**')
 
 secrets = st.secrets["connections"]["gsheets"]
 credentials_info = {
